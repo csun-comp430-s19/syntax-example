@@ -1,3 +1,5 @@
+package syntax_example;
+
 public class VariableToken implements Token {
     public String name;
 
