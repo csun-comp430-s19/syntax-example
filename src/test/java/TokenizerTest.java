@@ -24,6 +24,12 @@ public class TokenizerTest {
     }
 
     @Test
+    public void testTokenizeSingleDigitInteger() {
+        assertTokenizes("0",
+                        new Token[]{ new NumberToken(0) });
+    }
+    
+    @Test
     public void testTokenizeInteger() {
         assertTokenizes("123",
                         new Token[]{ new NumberToken(123) });

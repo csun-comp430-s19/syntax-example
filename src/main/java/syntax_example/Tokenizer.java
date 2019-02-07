@@ -84,7 +84,11 @@ public class Tokenizer {
     // assumes there is at least one character left
     // returns null if it couldn't parse a token
     private Token tryTokenizeSingleChar() {
-        return SINGLE_CHAR_TOKENS.get(input[inputPos++]);
+        final Token result = SINGLE_CHAR_TOKENS.get(input[inputPos]);
+        if (result != null) {
+            inputPos++;
+        }
+        return result;
     }
     
     private void skipWhitespace() {
