@@ -8,7 +8,7 @@ i is an integer
 var is a variable
 op ::= + | - | * | /
 exp ::= additive
-additive ::= multiplicative ( ('+' | '-') multiplicative )*
+additive ::= multiplicative ( ('+' | '-') multiplicative)*
 multiplicative ::= primary ( ('*' | '/') primary)*
 primary ::= i | var | - exp | if (exp) { exp } else { exp } | ( exp )
 ```
