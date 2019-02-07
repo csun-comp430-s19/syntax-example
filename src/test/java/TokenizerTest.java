@@ -18,7 +18,8 @@ public class TokenizerTest {
             assertArrayEquals(expected,
                               received.toArray(new Token[received.size()]));
         } catch (final TokenizerException e) {
-            assertTrue("Unexpected tokenization failure for " + input,
+            assertTrue(("Unexpected tokenization failure for \"" +
+                        input + "\": " + e.getMessage()),
                        expected == null);
         }
     }
