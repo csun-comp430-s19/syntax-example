@@ -53,6 +53,53 @@ public class TokenizerTest {
         assertTokenizes("  123  ",
                         new Token[]{ new NumberToken(123) });
     }
+
+    @Test
+    public void testTokenizeVariableSingleLetter() {
+        assertTokenizes("x",
+                        new Token[]{ new VariableToken("x") });
+    }
+
+    @Test
+    public void testTokenizeVariableMultiLetter() {
+        assertTokenizes("foo",
+                        new Token[]{ new VariableToken("foo") });
+    }
+
+    @Test
+    public void testTokenizeVariableStartsWithIf() {
+        assertTokenizes("ifx",
+                        new Token[]{ new VariableToken("ifx") });
+    }
+
+    @Test
+    public void testTokenizeIf() {
+        assertTokenizes("if",
+                        new Token[]{ new IfToken() });
+    }
+
+    @Test
+    public void testTokenizeSingleChars() {
+        assertTokenizes("+-*/(){}",
+                        new Token[]{ new PlusToken(),
+                                     new MinusToken(),
+                                     new MultToken(),
+                                     new DivToken(),
+                                     new LeftParenToken(),
+                                     new RightParenToken(),
+                                     new LeftCurlyToken(),
+                                     new RightCurlyToken() });
+    }
+
+    @Test
+    public void testTokenizeIntermixed() {
+        assertTokenizes("*if+foo-",
+                        new Token[]{ new MultToken(),
+                                     new IfToken(),
+                                     new PlusToken(),
+                                     new VariableToken("foo"),
+                                     new MinusToken() });
+    }
 }
 
             
