@@ -1,9 +1,18 @@
 package syntax_example;
 
 public class VariableToken implements Token {
-    public String name;
+    public final String name;
 
     public VariableToken(String name) {
         this.name = name;
+    }
+
+    public int hashCode() { return 9; }
+    public boolean equals(final Object other) {
+        return (other instanceof VariableToken &&
+                ((VariableToken)other).name.equals(name));
+    }
+    public String toString() {
+        return name;
     }
 }
