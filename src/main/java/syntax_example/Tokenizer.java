@@ -19,6 +19,7 @@ public class Tokenizer {
             put('}', new RightCurlyToken());
         }};
     private static IfToken IF_TOKEN = new IfToken();
+    private static ElseToken ELSE_TOKEN = new ElseToken();
     // end static variables
     
     // begin instance variables
@@ -72,7 +73,8 @@ public class Tokenizer {
             return null;
         }
 
-        if (name.equals("if")) {
+        if (name.equals("if") ||
+            name.equals("else")) {
             // reset position
             inputPos = initialInputPos;
             return null;
@@ -117,6 +119,13 @@ public class Tokenizer {
                    input[inputPos + 1] == 'f') {
             inputPos += 2;
             return IF_TOKEN;
+        } else if (inputPos < input.length - 3 &&
+                   input[inputPos] == 'e' &&
+                   input[inputPos + 1] == 'l' &&
+                   input[inputPos + 2] == 's' &&
+                   input[inputPos + 3] == 'e') {
+            inputPos += 4;
+            return ELSE_TOKEN;
         } else if ((singleCharToken = tryTokenizeSingleChar()) != null) {
             return singleCharToken;
         } else {

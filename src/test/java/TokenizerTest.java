@@ -100,6 +100,28 @@ public class TokenizerTest {
                                      new VariableToken("foo"),
                                      new MinusToken() });
     }
+
+    @Test
+    public void testTokenizeElse() {
+        assertTokenizes("else",
+                        new Token[]{ new ElseToken() });
+    }
+
+    @Test
+    public void testTokenizeIfExpression() {
+        assertTokenizes("if (1) { x } else { y }",
+                        new Token[]{ new IfToken(),
+                                     new LeftParenToken(),
+                                     new NumberToken(1),
+                                     new RightParenToken(),
+                                     new LeftCurlyToken(),
+                                     new VariableToken("x"),
+                                     new RightCurlyToken(),
+                                     new ElseToken(),
+                                     new LeftCurlyToken(),
+                                     new VariableToken("y"),
+                                     new RightCurlyToken() });
+    }
 }
 
             
