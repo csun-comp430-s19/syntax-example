@@ -10,5 +10,5 @@ op ::= + | - | * | /
 exp ::= additive
 additive ::= multiplicative ( ('+' | '-') multiplicative)*
 multiplicative ::= primary ( ('*' | '/') primary)*
-primary ::= i | var | - exp | if (exp) { exp } else { exp } | ( exp )
+primary ::= i | var | - primary | if (exp) { exp } else { exp } | ( exp )
 ```

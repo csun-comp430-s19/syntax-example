@@ -149,7 +149,7 @@ public class Parser {
             resultExp = new VariableExp(((VariableToken)current).name);
             resultPos = startPos + 1;
         } else if (current instanceof MinusToken) {
-            final ParseResult<Exp> nested = parseExp(startPos + 1);
+            final ParseResult<Exp> nested = parsePrimary(startPos + 1);
             resultExp = new UnaryMinusExp(nested.result);
             resultPos = nested.tokenPos;
         } else if (current instanceof LeftParenToken) {
