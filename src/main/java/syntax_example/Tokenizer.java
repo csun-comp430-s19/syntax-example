@@ -7,19 +7,19 @@ import java.util.ArrayList;
 
 public class Tokenizer {
     // begin static variables
-    private static Map<Character, Token> SINGLE_CHAR_TOKENS =
-        new HashMap<Character, Token>() {{
-            put('+', new PlusToken());
-            put('-', new MinusToken());
-            put('*', new MultToken());
-            put('/', new DivToken());
-            put('(', new LeftParenToken());
-            put(')', new RightParenToken());
-            put('{', new LeftCurlyToken());
-            put('}', new RightCurlyToken());
+    private static Map<String, Token> TOKEN_MAPPING =
+        new HashMap<String, Token>() {{
+            put("+", new PlusToken());
+            put("-", new MinusToken());
+            put("*", new MultToken());
+            put("/", new DivToken());
+            put("(", new LeftParenToken());
+            put(")", new RightParenToken());
+            put("{", new LeftCurlyToken());
+            put("}", new RightCurlyToken());
+            put("if", new IfToken());
+            put("else", new ElseToken());
         }};
-    private static IfToken IF_TOKEN = new IfToken();
-    private static ElseToken ELSE_TOKEN = new ElseToken();
     // end static variables
     
     // begin instance variables
@@ -32,6 +32,10 @@ public class Tokenizer {
         inputPos = 0;
     }
 
+    public static boolean isTokenString(final String input) {
+        return TOKEN_MAPPING.containsKey(input);
+    }
+    
     // assumes there is at least one character left
     // returns null if it couldn't parse a number
     private NumberToken tryTokenizeNumber() {
@@ -73,8 +77,7 @@ public class Tokenizer {
             return null;
         }
 
-        if (name.equals("if") ||
-            name.equals("else")) {
+        if (isTokenString(name)) {
             // reset position
             inputPos = initialInputPos;
             return null;
@@ -83,14 +86,30 @@ public class Tokenizer {
         }
     }
 
-    // assumes there is at least one character left
-    // returns null if it couldn't parse a token
-    private Token tryTokenizeSingleChar() {
-        final Token result = SINGLE_CHAR_TOKENS.get(input[inputPos]);
-        if (result != null) {
-            inputPos++;
+    private boolean prefixCharsEqual(final String probe) {
+        int targetPos = inputPos;
+        int probePos = 0;
+
+        while (targetPos < input.length &&
+               probePos < probe.length() &&
+               probe.charAt(probePos) == input[targetPos]) {
+            probePos++;
+            targetPos++;
         }
-        return result;
+
+        return probePos == probe.length();
+    }
+            
+    // returns null if it couldn't parse a token
+    private Token tryTokenizeOther() {
+        for (final Map.Entry<String, Token> entry : TOKEN_MAPPING.entrySet()) {
+            final String key = entry.getKey();
+            if (prefixCharsEqual(key)) {
+                inputPos += key.length();
+                return entry.getValue();
+            }
+        }
+        return null;
     }
     
     private void skipWhitespace() {
@@ -104,7 +123,7 @@ public class Tokenizer {
     public Token tokenizeSingle() throws TokenizerException {
         VariableToken var = null;
         NumberToken num = null;
-        Token singleCharToken = null;
+        Token otherToken = null;
 
         skipWhitespace();
 
@@ -114,20 +133,8 @@ public class Tokenizer {
             return var;
         } else if ((num = tryTokenizeNumber()) != null) {
             return num;
-        } else if (inputPos < input.length - 1 &&
-                   input[inputPos] == 'i' &&
-                   input[inputPos + 1] == 'f') {
-            inputPos += 2;
-            return IF_TOKEN;
-        } else if (inputPos < input.length - 3 &&
-                   input[inputPos] == 'e' &&
-                   input[inputPos + 1] == 'l' &&
-                   input[inputPos + 2] == 's' &&
-                   input[inputPos + 3] == 'e') {
-            inputPos += 4;
-            return ELSE_TOKEN;
-        } else if ((singleCharToken = tryTokenizeSingleChar()) != null) {
-            return singleCharToken;
+        } else if ((otherToken = tryTokenizeOther()) != null) {
+            return otherToken;
         } else {
             throw new TokenizerException("Invalid character " +
                                          input[inputPos] +
