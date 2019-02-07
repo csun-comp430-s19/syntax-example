@@ -38,7 +38,7 @@ public class Tokenizer {
         String digits = "";
 
         while (inputPos < input.length &&
-               Character.isDigit(inputPos)) {
+               Character.isDigit(input[inputPos])) {
             digits += input[inputPos];
             inputPos++;
         }
